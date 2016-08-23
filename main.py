@@ -24,21 +24,42 @@ page_header = """
 <!DOCTYPE html>
 <html>
 <head>
+    <style>
+    body {
+        font-family: arial, sans-serif;
+    }
+    h1 {
+        font-size: 1.5em;
+        text-align: center;
+    }
+    form {
+        background-color:#eee;
+        padding: 30px;
+        border: 1px #333 solid;
+        margin: 30px auto;
+        width:400px;
+    }
+    .error {
+        color: red;
+    }
+    </style>
     <title>ROT13</title>
 </head>
 <body>
 """
 
 #page header
-edit_header = "<h1>Enter some text to ROT13:</h1>"
+edit_header = "<h1>LaunchCode: Formation Assignment</h1>"
 
 # a form for adding text
 form = """
 <form method="post">
-    <textarea name="decode-text" cols="40" rows="5">%(encrypted)s</textarea>
+    Rotate by: <input type="text" name="rotate">
+    <br /><br />
+    <textarea name="decode-text" cols="60" rows="5">%(encrypted)s</textarea>
     <br /><br />
     <input type="submit" value="Decode It"/>
-    <div style="color:red;">%(error)s</div>
+    <div class="error">%(error)s</div>
 </form>
 """
 
@@ -61,8 +82,9 @@ class MainHandler(webapp2.RequestHandler):
         self.write_form()
 
     def post(self):
+        rotate = int(self.request.get("rotate"))
         myText = self.request.get("decode-text")
-        encryptedText = cgi.escape(encrypt(myText, 13))
+        encryptedText = cgi.escape(encrypt(myText, rotate))
 
         #if no value was entered, display an error message
         #else write the form with encrypted text
